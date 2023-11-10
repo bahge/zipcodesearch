@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Bahge\CepSearch\Constants;
+namespace Bahge\CepSearch\Domain;
 
 use Bahge\CepSearch\Constants\StatesData\States;
 use DS\Map;

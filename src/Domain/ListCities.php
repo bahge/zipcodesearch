@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Bahge\CepSearch\Constants;
+namespace Bahge\CepSearch\Domain;
 
 use DS\Map;
 use DS\Vector;
@@ -35,7 +35,20 @@ final class ListCities
     {
         
         $city = $this->cities->filter(function($cityKey, $cityValue) use ($cep) {
-            if ( ( is_array($cityValue) ) && ( $cep >= $cityValue['cep'][0] ) && ( $cep <= $cityValue['cep'][1] ) ) return true;
+            if (( is_array($cityValue) ) && 
+                ( $cep >= $cityValue['cep'][0] ) && 
+                ( $cep <= $cityValue['cep'][1] ) ) return true;
+
+            if (isset($cityValue['cep'][0][0])) 
+                if (( is_array($cityValue) ) && 
+                    ( $cep >= $cityValue['cep'][0][0] ) && 
+                    ( $cep <= $cityValue['cep'][0][1] ) ) return true;
+
+            if (isset($cityValue['cep'][1][0])) 
+                if (( is_array($cityValue) ) && 
+                    ( $cep >= $cityValue['cep'][1][0] ) && 
+                    ( $cep <= $cityValue['cep'][1][1] ) ) return true;
+            
             return false;
         });
 
@@ -48,8 +61,7 @@ final class ListCities
 
     private function getValueByField(string $field) : int | string | null
     {
-        $cityData = (array) $this->cityMap->get(0);
-        if ( isset($cityData[0]) ) $cityData = (array) $cityData[0];
+        $cityData = $this->sanitizeCityData();
 
         switch ($field) {
             case 'ibge':
@@ -60,6 +72,15 @@ final class ListCities
                 return null;
         }
     }
+
+    protected function sanitizeCityData(): array 
+    {
+        $cityData = (array) $this->cityMap->get(0);
+        if ( isset($cityData[0]) ) return (array) $cityData[0];
+        return [];
+    }
+
+    public function getCityInfo(): string { return json_encode($this->sanitizeCityData(), JSON_UNESCAPED_UNICODE); }
 
     /** @return string */
     public function getName(): string { return $this->getValueByField('name'); }
