@@ -2,8 +2,9 @@
 declare(strict_types=1);
 namespace Bahge\CepSearch\Constants\StatesData\Interfaces;
 
+use DS\Map;
+
 interface ICitiesInfo
 {
-    /** @return array<array<string | array<int | array<int>> | int>> */
-    public static function citiesInfo(): array;
+    public static function citiesInfo(): Map;
 }
