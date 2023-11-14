@@ -2,13 +2,14 @@
 declare(strict_types=1);
 namespace Bahge\CepSearch\Domain;
 
-use Bahge\CepSearch\Constants\StatesData\States;
 use DS\Map;
+use Bahge\CepSearch\Constants\StatesData\States;
+use Bahge\CepSearch\Constants\StatesData\StatesMap;
 
 final class ListState
 {
     private Map $states;
-    
+    private Map $statesLimit;
     private Map $state;
 
     public function __construct()
@@ -16,9 +17,9 @@ final class ListState
         $this->state = new Map();
         $this->state->allocate(1);
 
-        $this->states = new Map();
-        $this->states->allocate(27);
-        $this->states->putAll(States::statesInfo());
+        $this->states = StatesMap::statesInfo();
+
+        $this->statesLimit = StatesMap::statesRanges();
     }
 
     public static function create(): self
@@ -28,9 +29,11 @@ final class ListState
 
     public function hasState(int $cep): bool
     {
+        if ( ( $cep < $this->statesLimit->get("InferiorLimit") ) && ( $cep > $this->statesLimit->get("SuperiorLimit") ) ) return false;
+        
         $state = $this->states->filter(function($stateKey, $statesValue) use ($cep) {
-            foreach ($this->getCepRanges($statesValue) as $key => $value) {
-                if ( (count($value) == 2) && ( $cep >= $value[0] ) && ( $cep <= $value[1] ) ) return true;
+            foreach ($statesValue->get('cepRanges') as $k => $cepRange) {
+                if ( (count($cepRange) == 2) && ( $cep >= $cepRange[0] ) && ( $cep <= $cepRange[1] ) ) return true;
             }
             return false;
         });
@@ -52,21 +55,6 @@ final class ListState
     { 
         if (!$this->state->isEmpty() && (is_string($this->state->keys()->get(0)))) return $this->state->keys()->get(0);
         return null;
-    }
-
-    /** @return  array<string, array<int, array<int, int>>|int|string> */
-    public function getStateInfo() : array | null 
-    { 
-        if (!$this->state->isEmpty() && is_array($this->state->values()->get(0))) return $this->state->values()->get(0);
-        return null;
-    }
-
-    /** @param mixed $statesValue
-     *  @return array<int, array<int, int>> */
-    protected function getCepRanges(mixed $statesValue): array 
-    {
-        if ( is_array($statesValue) && array_key_exists('cepRanges', $statesValue) )  return $statesValue['cepRanges'];
-        return [];
     }
 
 }
