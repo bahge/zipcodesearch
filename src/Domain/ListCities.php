@@ -36,15 +36,20 @@ final class ListCities
         if ( is_null($this->zipCode) ) $this->zipCode = $zipCode;
 
         $city = $this->cities->filter(function($cityKey, $cityValue) {
-
             $zipCodeRefs = $cityValue->get('zipCode');
             if(in_array(true, array_map('is_array', $cityValue->get('zipCode')), true))
             {
                 foreach($zipCodeRefs as $k => $zipCodeRef) {
-                    if ( $this->zipCodeInRange($zipCodeRef) == true ) return true;
+                    if ( $this->zipCodeInRange($zipCodeRef) == true ) {
+                        return true;
+                    }
                 }
             }
-            if ( $this->zipCodeInRange($zipCodeRefs) == true ) return true;           
+
+            if ( $this->zipCodeInRange($zipCodeRefs) == true ) {
+                return true;           
+            }
+
             return false;
         });
 
