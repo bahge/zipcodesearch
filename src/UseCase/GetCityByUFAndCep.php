@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
-namespace Bahge\CepSearch\UseCase;
+namespace Bahge\ZipCodeSearch\UseCase;
 
 use Exception;
-use Bahge\CepSearch\Domain\ListState;
-use Bahge\CepSearch\Domain\ListCities;
+use Bahge\ZipCodeSearch\Domain\ListCities;
 
 final class GetIBGEByUFAndCep
 {

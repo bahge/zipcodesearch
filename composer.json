@@ -1,10 +1,10 @@
 {
-    "name": "bahge/cep-search",
+    "name": "bahge/zipcode-search",
     "description": "Lib para tradução de cep para código de ibge, baseada nas informações dos correios: https://buscacepinter.correios.com.br/app/faixa_cep_uf_localidade/index.php e na tabela de municípios do ibge: https://www.ibge.gov.br/explica/codigos-dos-municipios.php.",
     "autoload": {
         "psr-4": {
-            "Bahge\\CepSearch\\": "src/",
-            "Bahge\\CepSearch\\Tests\\": "tests/"
+            "Bahge\\ZipCodeSearch\\": "src/",
+            "Bahge\\ZipCodeSearch\\Tests\\": "tests/"
         }
     },
     "authors": [

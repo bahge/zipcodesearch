@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Bahge\CepSearch\Constants;
+namespace Bahge\ZipCodeSearch\Constants;
 
 final class AppError
 {

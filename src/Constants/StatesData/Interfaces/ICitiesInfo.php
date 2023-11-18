@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Bahge\CepSearch\Constants\StatesData\Interfaces;
+namespace Bahge\ZipCodeSearch\Constants\StatesData\Interfaces;
 
 use DS\Map;
 
