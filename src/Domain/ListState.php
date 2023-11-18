@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
-namespace Bahge\CepSearch\Domain;
+namespace Bahge\ZipCodeSearch\Domain;
 
 use DS\Map;
-use Bahge\CepSearch\Constants\StatesData\States;
-use Bahge\CepSearch\Constants\StatesData\StatesMap;
+use Bahge\ZipCodeSearch\Constants\StatesData\States;
 
 final class ListState
 {
@@ -17,9 +16,9 @@ final class ListState
         $this->state = new Map();
         $this->state->allocate(1);
 
-        $this->states = StatesMap::statesInfo();
+        $this->states = States::statesInfo();
 
-        $this->statesLimit = StatesMap::statesRanges();
+        $this->statesLimit = States::statesRanges();
     }
 
     public static function create(): self
@@ -27,13 +26,14 @@ final class ListState
         return new self();
     }
 
-    public function hasState(int $cep): bool
+    public function hasState(int $zipCode): bool
     {
-        if ( ( $cep < $this->statesLimit->get("InferiorLimit") ) && ( $cep > $this->statesLimit->get("SuperiorLimit") ) ) return false;
+        if ( ( $zipCode < $this->statesLimit->get("InferiorLimit") ) && ( $zipCode > $this->statesLimit->get("SuperiorLimit") ) ) return false;
         
-        $state = $this->states->filter(function($stateKey, $statesValue) use ($cep) {
-            foreach ($statesValue->get('cepRanges') as $k => $cepRange) {
-                if ( (count($cepRange) == 2) && ( $cep >= $cepRange[0] ) && ( $cep <= $cepRange[1] ) ) return true;
+        $state = $this->states->filter(function($stateKey, $statesValue) use ($zipCode) {
+            if (!$statesValue->hasKey('zipCodeRanges')) return false;
+            foreach ($statesValue->get('zipCodeRanges') as $k => $zipCodeRange) {
+                if ( (count($zipCodeRange) == 2) && ( $zipCode >= $zipCodeRange[0] ) && ( $zipCode <= $zipCodeRange[1] ) ) return true;
             }
             return false;
         });
@@ -48,8 +48,8 @@ final class ListState
 
     public function getState() : Map | null 
     { 
-        if (!$this->state->isEmpty()) return $this->state;
-        return null;
+        if ($this->state->isEmpty()) return null;
+        return $this->state;
     }
     public function getAcronymState() : string | null 
     { 
